@@ -12,6 +12,8 @@ from datetime import datetime
 
 def setup_browser():
     options = Options()
+    #add a piece of code to run this program without opening the browser
+    #remove options.add_argument("--headless")
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
@@ -22,6 +24,8 @@ def setup_browser():
 
 def close_modal_if_present(browser):
     try:
+        #add the class of the button to close the popup inside the find_elements()
+        #remove  "button.modal__dismiss"
         dismiss_buttons = browser.find_elements(By.CSS_SELECTOR, "button.modal__dismiss")
         for button in dismiss_buttons:
             if button.is_displayed():
@@ -35,7 +39,8 @@ def extract_job_description(browser, card):
     try:
         browser.execute_script("arguments[0].click();", card)
         time.sleep(2)
-
+        #add the class of the job description container inside the presence_of_element_located(())
+        #remove  "div.show-more-less-html__markup"
         description_container = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.show-more-less-html__markup"))
         )
@@ -49,11 +54,14 @@ def extract_job_description(browser, card):
         """
 
         try:
+            #add the class of the show more button inside the find_elements()
+            #remove "button.show-more-less-html__button
             show_more_buttons = browser.find_elements(
                 By.CSS_SELECTOR, 
                 "button.show-more-less-html__button"
             )
 
+            
             for button in show_more_buttons:
                 if button.is_displayed() and button.get_attribute("aria-expanded") == "false":
                     browser.execute_script("arguments[0].click();", button)
@@ -98,8 +106,11 @@ def extract_job_description(browser, card):
         print(f"Error extracting job description: {e}")
         return "No Description Found"
 
-def detect_job_cards_with_description(n=3):
-    url = "https://www.linkedin.com/jobs/search?keywords=web%20development&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0"
+def detect_job_cards_with_description(keyword,n=3):
+
+    base_url = "https://www.linkedin.com/jobs/search"
+    formatted_keyword = keyword.replace(" ", "%20")
+    url =  f"{base_url}?keywords={formatted_keyword}&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0"
     browser = setup_browser()
     job_listings = []
 
@@ -151,6 +162,6 @@ def detect_job_cards_with_description(n=3):
 
     return job_listings
 
-# Run the function
+
 if __name__ == "__main__":
-    detect_job_cards_with_description(n=3)
+    detect_job_cards_with_description('Web Developer')
