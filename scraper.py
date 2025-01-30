@@ -13,8 +13,7 @@ from datetime import datetime
 def setup_browser():
     options = Options()
     #add a piece of code to run this program without opening the browser
-    #remove options.add_argument("--headless")
-    options.add_argument("--headless")
+   
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--window-size=1920,1080")
@@ -25,8 +24,7 @@ def setup_browser():
 def close_modal_if_present(browser):
     try:
         #add the class of the button to close the popup inside the find_elements()
-        #remove  "button.modal__dismiss"
-        dismiss_buttons = browser.find_elements(By.CSS_SELECTOR, "button.modal__dismiss")
+        
         for button in dismiss_buttons:
             if button.is_displayed():
                 browser.execute_script("arguments[0].click();", button)
@@ -40,9 +38,9 @@ def extract_job_description(browser, card):
         browser.execute_script("arguments[0].click();", card)
         time.sleep(2)
         #add the class of the job description container inside the presence_of_element_located(())
-        #remove  "div.show-more-less-html__markup"
+        
         description_container = WebDriverWait(browser, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "div.show-more-less-html__markup"))
+            EC.presence_of_element_located((By.CSS_SELECTOR))
         )
 
         js_remove_restrictions = """
@@ -55,10 +53,9 @@ def extract_job_description(browser, card):
 
         try:
             #add the class of the show more button inside the find_elements()
-            #remove "button.show-more-less-html__button
+           
             show_more_buttons = browser.find_elements(
-                By.CSS_SELECTOR, 
-                "button.show-more-less-html__button"
+                By.CSS_SELECTOR
             )
 
             
