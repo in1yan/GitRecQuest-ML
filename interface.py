@@ -30,7 +30,10 @@ if st.button("Search Jobs"):
             for job in job_listings:
                 st.subheader(job["title"])
                 st.text(f"🏢 Company: {job['company']}")
-                st.write(f"📝 **Description:** {job['description']}")
+                preview = " ".join(job["description"].split()[:20]) + "..."
+                st.write("📝 **Short Description:** ",preview)
+                with st.expander("show more"):
+                    st.write(f"📝 **Description:** {job['description']}")
                 st.write(f"📊 **Resume Match Score:** {job['similarity_score']:.2f}")
 
                 if job["missing_skills"]:
