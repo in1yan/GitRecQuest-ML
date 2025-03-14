@@ -13,17 +13,23 @@ from datetime import datetime
 def setup_browser():
     options = Options()
     #add a piece of code to run this program without opening the browser
-   
+    options.add_argument("--headless")  # Adding headless mode
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--window-size=1920,1080")
 
-    browser = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    # Fix: Use Service object with ChromeDriverManager
+    service = Service(ChromeDriverManager().install())
+    browser = webdriver.Chrome(service=service, options=options)
     return browser
 
 def close_modal_if_present(browser):
     try:
         #add the class of the button to close the popup inside the find_elements()
+        dismiss_buttons = browser.find_elements(
+            By.CSS_SELECTOR, 
+            "button.artdeco-modal__dismiss, button.artdeco-toast-item__dismiss"
+        )
         
         for button in dismiss_buttons:
             if button.is_displayed():
@@ -40,7 +46,7 @@ def extract_job_description(browser, card):
         #add the class of the job description container inside the presence_of_element_located(())
         
         description_container = WebDriverWait(browser, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "div.show-more-less-html__markup"))
         )
 
         js_remove_restrictions = """
@@ -55,7 +61,8 @@ def extract_job_description(browser, card):
             #add the class of the show more button inside the find_elements()
            
             show_more_buttons = browser.find_elements(
-                By.CSS_SELECTOR
+                By.CSS_SELECTOR, 
+                "button.show-more-less-html__button--more, button.show-more-less-html__button"
             )
 
             
@@ -103,11 +110,20 @@ def extract_job_description(browser, card):
         print(f"Error extracting job description: {e}")
         return "No Description Found"
 
-def detect_job_cards_with_description(keyword,n=3):
-
+def detect_job_cards_with_description(keyword, n=5):
+    """
+    Scrape LinkedIn for job listings based on search parameters.
+    
+    Args:
+        keyword (str): Job keyword or title to search for
+        n (int): Number of jobs to scrape (default: 5)
+        
+    Returns:
+        list: List of job listings with details
+    """
     base_url = "https://www.linkedin.com/jobs/search"
     formatted_keyword = keyword.replace(" ", "%20")
-    url =  f"{base_url}?keywords={formatted_keyword}&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0"
+    url = f"{base_url}?keywords={formatted_keyword}&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0"
     browser = setup_browser()
     job_listings = []
 
@@ -134,6 +150,18 @@ def detect_job_cards_with_description(keyword,n=3):
 
                 close_modal_if_present(browser)
                 job_data["description"] = extract_job_description(browser, card)
+
+                # Extract location if available
+                try:
+                    job_data["location"] = card.find_element(By.CLASS_NAME, "job-search-card__location").text.strip()
+                except:
+                    job_data["location"] = "Location not specified"
+                
+                # Extract date posted if available
+                try:
+                    job_data["date_posted"] = card.find_element(By.CSS_SELECTOR, "time.job-search-card__listdate").get_attribute("datetime")
+                except:
+                    job_data["date_posted"] = "Recently posted"
 
                 job_listings.append(job_data)
                 print(f"Successfully processed job: {job_data['title']}")

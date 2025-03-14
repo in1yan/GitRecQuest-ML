@@ -19,23 +19,26 @@ class ResumeMatcher:
         self.job_description = job_description
         self.vectorizer = TfidfVectorizer(stop_words="english")
         self.job_tfidf = self.vectorizer.fit_transform([job_description])
-
+    
     def match_resume(self, resume_text):
         if not resume_text.strip():
-            return {"similarity_score": 0.0, "missing_skills": []}
-
+            return {"similarity_score": 0.0, "missing_skills": [], "matched_skills": []}
+        
         resume_tfidf = self.vectorizer.transform([resume_text])
         similarity = cosine_similarity(self.job_tfidf, resume_tfidf)[0][0]
-
+        
         job_skills = self.extract_skills(self.job_description)
         resume_skills = self.extract_skills(resume_text)
+        
         missing_skills = job_skills - resume_skills
-
+        matched_skills = job_skills.intersection(resume_skills)
+        
         return {
             "similarity_score": similarity,
-            "missing_skills": list(missing_skills)
+            "missing_skills": list(missing_skills),
+            "matched_skills": list(matched_skills)  # Added matched_skills to the return dictionary
         }
-
+    
     @staticmethod
     def extract_skills(text):
         text = text.lower()
