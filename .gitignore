@@ -1,2 +1,59 @@
-__pycache__/ 
-**/linkedin_jobs.json
+# Byte-compiled / cached files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+#custom ignores
+resume.pdf
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and debug files
+*.log
+logs/
+debug.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python package files
+*.egg
+*.egg-info/
+dist/
+build/
+*.tar.gz
+
+# venv and pip-related files
+pip-log.txt
+pip-delete-this-directory.txt
+
+# MyPy type checker cache
+.mypy_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+*.cover
+
+# pytest cache
+.pytest_cache/
+
+# Editor and IDE specific files
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Docker-related files
+*.dockerfile

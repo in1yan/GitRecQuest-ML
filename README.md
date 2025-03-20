@@ -17,11 +17,19 @@ This open-source project provides a **LinkedIn Job Scraper** combined with a **R
 
 ```
 resume-matcher/
-│── scraper.py          # Scrapes LinkedIn job postings based on a keyword
-│── resume_matcher.py   # Matches resume content with job descriptions using TF-IDF
-│── interface.py        # Streamlit-based UI for user interaction
-│── requirements.txt    # Dependencies required to run the project
-│── README.md           # Project documentation
+│── frontend/                # Frontend-related code and UI components  
+│   ├── app.py               # Main application script for the frontend  
+│   ├── ui_components.py     # UI-related functions and components  
+│   ├── utils.py             # Utility functions for frontend operations  
+│── .gitignore               # Files and folders to be ignored by Git  
+│── LICENSE                  # License information for the project  
+│── linkedin_jobs.json       # JSON file containing scraped LinkedIn job data  
+│── main.py                  # Main script which runs the streamlit application via cmd 
+│── README.md                # Project documentation and instructions  
+│── requirements.txt         # List of dependencies required for the project  
+│── resume_matcher.py        # Script for matching resumes with job descriptions  
+│── scraper.py               # Script for scraping job listings from LinkedIn  
+
 ```
 
 ---
@@ -48,7 +56,7 @@ pip install -r requirements.txt
 - in your command prompt, run :
 
 ```
-streamlit run interface.py
+python -u main.py
 ```
 
 ---
@@ -71,14 +79,14 @@ streamlit run interface.py
   - **Match Score** (0-1 scale)
   - **Missing Skills** (skills in the job description but absent in the resume)
 
-### 🖥️ 3. Streamlit UI
+### 🖥️ 3. Streamlit UI  
 
-- The **interface.py** provides a web-based UI for user-friendly interaction.
-- Users can:
-  - Enter a job keyword to search LinkedIn.
-  - Paste their resume.
-  - View job listings ranked by match score.
-  - See missing skills in their resume.
+The **frontend/app.py** provides a web-based UI for user-friendly interaction.  
+- Upload a resume in **PDF or TXT** format (*PDF support is not fully functional yet*).  
+- Enter a **job keyword** to search LinkedIn.  
+- View **job listings ranked by match score**.  
+- Use the **advanced search function** (*currently not working*).  
+
 
 ---
 
