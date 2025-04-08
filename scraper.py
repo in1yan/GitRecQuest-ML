@@ -110,12 +110,13 @@ def extract_job_description(browser, card):
         print(f"Error extracting job description: {e}")
         return "No Description Found"
 
-def detect_job_cards_with_description(keyword, n=5):
+def detect_job_cards_with_description(keyword,location=None, n=5):
     """
     Scrape LinkedIn for job listings based on search parameters.
     
     Args:
         keyword (str): Job keyword or title to search for
+        loaction(str): Job location to search for
         n (int): Number of jobs to scrape (default: 5)
         
     Returns:
@@ -124,6 +125,9 @@ def detect_job_cards_with_description(keyword, n=5):
     base_url = "https://www.linkedin.com/jobs/search"
     formatted_keyword = keyword.replace(" ", "%20")
     url = f"{base_url}?keywords={formatted_keyword}&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0"
+    if location:
+        formatted_location = location.replace(" ", "%20")
+        url = f"{base_url}?keywords={formatted_keyword}&location={formatted_location}&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0"
     browser = setup_browser()
     job_listings = []
 
@@ -189,4 +193,4 @@ def detect_job_cards_with_description(keyword, n=5):
 
 
 if __name__ == "__main__":
-    detect_job_cards_with_description('Web Developer')
+    detect_job_cards_with_description('Web Developer', 'india')

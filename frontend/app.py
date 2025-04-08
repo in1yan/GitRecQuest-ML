@@ -72,7 +72,7 @@ if search_button:
     if keyword.strip():
         with st.spinner("Fetching and analyzing job listings... This may take a moment."):
             #calling scraper
-            job_listings = detect_job_cards_with_description(keyword)
+            job_listings = detect_job_cards_with_description(keyword, location=location)
             
             if job_listings:
                 #resume matcher
